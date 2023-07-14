@@ -1,0 +1,9 @@
+{% extends 'mailing/base.html' %}
+{% load mailing_tags %}
+{% block body %}
+<p align="right">Views counts: {{Blog.views}}</p>
+{% if Blog.image %}
+    <img src="{% media_path Blog.image %}" width="250" align="left" vspace="5" hspace="15">
+{% endif %}
+{{Blog.plot}}</p>
+{% endblock %}

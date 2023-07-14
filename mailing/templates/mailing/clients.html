@@ -1,0 +1,44 @@
+{% extends 'mailing/base.html' %}
+{% block body %}
+<div class="table-responsive small">
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+              <th scope="col">#</th>
+              <th scope="col">Client Name</th>
+              <th scope="col">Mail Address</th>
+              <th scope="col">Comment</th>
+            {% if perms.mailing.view_clients %}
+                <th scope="col">View</th>
+            {% endif %}
+            {% if perms.mailing.change_clients %}
+                <th scope="col">Update</th>
+            {% endif %}
+            {% if perms.mailing.delete_clients %}
+                <th scope="col">Delete</th>
+            {% endif %}
+            </tr>
+        </thead>
+{% for client in Clients %}
+  <tbody>
+    <tr>
+        <td>{{client.pk}}</td>
+        <td>{{client.full_name}}</td>
+        <td>{{client.email}}</td>
+        <td>{{client.comment}}</td>
+
+        {% if perms.mailing.view_clients %}
+        <td><a href="{% url 'mailing:client_card' client.slug %}"  class="btn btn-sm btn-outline-secondary">View</a></td>
+        {% endif %}
+        {% if perms.mailing.change_clients %}
+        <td><a href="{% url 'mailing:client_update' client.slug %}"  class="btn btn-sm btn-outline-secondary">Update</a></td>
+        {% endif %}
+        {% if perms.mailing.delete_clients %}
+        <td><a href="{% url 'mailing:client_delete' client.slug %}"  class="btn btn-sm btn-outline-secondary">Delete</a></td>
+        {% endif %}
+    </tr>
+  </tbody>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

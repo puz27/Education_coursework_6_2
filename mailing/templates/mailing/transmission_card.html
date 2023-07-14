@@ -1,0 +1,22 @@
+{% extends 'mailing/base.html' %}
+
+{% block body %}
+
+<li>Title: {{ Transmission.title }}</li>
+<li>Owner: {{ Transmission.owner|default:"No owner." }}</li>
+<li>Time: {{ Transmission.time }}</li>
+<li>Frequency: {{ Transmission.frequency }}</li>
+<li>Message theme: {{ Transmission.message.theme }}</li>
+<li>Message body: {{ Transmission.message.body }}</li>
+<li>Is Published: {{ Transmission.is_published }}</li>
+<br>
+<h5> Clients: </h5>
+{% for client in Transmission.clients.all %}
+<li>{{ client }}</li>
+{%  endfor %}
+<br>
+<h5>Last Statistics:</h5>
+{% for i in Statistic %}
+<p>{{ i }} </p>
+{% endfor%}
+{% endblock %}

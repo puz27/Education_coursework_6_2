@@ -1,0 +1,10 @@
+{% extends 'mailing/base.html' %}
+{% block body %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+    {{ form.as_p }}
+    </div>
+    <input type="submit" value="Create New Transmission">
+</form>
+{% endblock %}

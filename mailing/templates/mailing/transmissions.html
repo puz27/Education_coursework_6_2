@@ -1,0 +1,55 @@
+{% extends 'mailing/base.html' %}
+{% block body %}
+<div class="table-responsive small">
+<table class="table table-striped table-sm">
+        <thead>
+        <tr>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Frequency</th>
+              <th scope="col">Status</th>
+              <th scope="col">Time to Send</th>
+              <th scope="col">Is Active</th>
+              {% if perms.mailing.view_transmission %}
+              <th scope="col">Full View</th>
+              {% endif %}
+              {% if perms.mailing.view_transmission %}
+              <th scope="col">Update</th>
+              {% endif %}
+              {% if perms.mailing.delete_transmission %}
+              <th scope="col">Delete</th>
+              {% endif %}
+
+
+         </tr>
+        </thead>
+
+{% for transmission in Transmissions %}
+    <tbody>
+        <tr>
+            <td>{{transmission.pk}}</td>
+            <td>{{transmission.title}}</td>
+            <td>{{transmission.frequency}}</td>
+            <td>{{transmission.status}}</td>
+            <td>{{transmission.time | date:"H:i:s"}}</td>
+
+            {% if transmission.is_published %}
+                <td> Yes </td>
+            {% else %}
+                 <td> No </td>
+            {% endif %}
+            {% if perms.mailing.view_transmission %}
+                <td> <a href="{% url 'mailing:transmission_card' transmission.slug %}"  class="btn btn-sm btn-outline-secondary">View</a></td>
+            {% endif %}
+            {% if perms.mailing.view_transmission %}
+                <td> <a href="{% url 'mailing:transmission_update' transmission.slug %}"  class="btn btn-sm btn-outline-secondary">Update</a></td>
+            {% endif %}
+            {% if perms.mailing.delete_transmission %}
+                <td> <a href="{% url 'mailing:transmission_delete' transmission.slug %}"  class="btn btn-sm btn-outline-secondary">Delete</a></td>
+            {% endif %}
+        </tr>
+      </tbody>
+ {% endfor %}
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'mailing/base.html' %}
+{% block body %}
+{{ test }}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="submit" value="{% if new_client %} Create Message Template {% else %} Create Message Template {% endif %}">
+</form>
+{% endblock %}

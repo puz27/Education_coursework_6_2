@@ -1,0 +1,9 @@
+{% extends 'mailing/base.html' %}
+
+{% block body %}
+
+<li>Theme: {{ Message.theme }}</li>
+<li>Body: {{ Message.body }}</li>
+<li>Owner: {{ Message.owner|default:"No owner." }}</li>
+
+{% endblock %}
