@@ -260,7 +260,14 @@
               </a>
             </li>
             {% endif %}
-
+            {% if perms.mailing.add_transmission %}
+             <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="{% url 'mailing:run_schedule' %}">
+                <svg class="bi"><use xlink:href="#puzzle"/></svg>
+                Run Scheduler
+              </a>
+            </li>
+          {% endif %}
 
           <ul class="nav flex-column mb-auto">
             {% if user.is_authenticated %}

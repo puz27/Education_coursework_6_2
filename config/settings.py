@@ -40,9 +40,9 @@ SITE_NAME = "127.0.0.1:8000"
 
 CRONTAB_COMMAND_SUFFIX = '2>&1'
 CRONJOBS = [
-    # ('*/1 * * * *', 'mailing.services.run_schedule', '>> %s/django_cron_log.log' % os.path.join(BASE_DIR, 'django_cron_log'))
-    ('*/1 * * * *', 'mailing.services.run_schedule')
-]
+    # ('*/1 * * * *', 'mailing.services.run_schedule', '>> %s/django_cron_log.log' % os.path.join(BASE_DIR, 'django_cron_log')),
+    ('*/10 * * * *', 'mailing.services.run_schedule'),
+     ]
 
 
 MIDDLEWARE = [
