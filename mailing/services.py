@@ -58,113 +58,115 @@ def sendmail(transmission_id: str, emails_base: list, message_theme: str, messag
         change_transmission_status.save()
 
 
-def run_schedule(request):
+def run_schedule():
     """Work with scheduler"""
-    if request.method == "GET":
-        schedule.clear()
-        active_transmissions = mailing.models.Transmission.objects.filter(is_published=True)
-        print("PREPARE SEND")
 
-        # DAILY SCHEDULER
-        for transmission in active_transmissions:
-            emails_base = []
-            print("TRANSMISSION TITLE:", transmission.title)
+    schedule.clear()
+    active_transmissions = mailing.models.Transmission.objects.filter(is_published=True)
+    print("PREPARE SEND")
 
-            if transmission.frequency == "DAILY":
-                print("TYPE: SEND DAILY")
-                print("ID:", transmission.pk)
-                convert_time = str(transmission.time)[:5]
-                print("TIME:", convert_time)
-                message = transmission.get_messages()
-                print("MESSAGE THEME:", message.theme)
-                print("MESSAGE BODY:", message.body)
-                for client_mail in transmission.get_clients():
-                    print("EMAIL:", client_mail.email)
-                    emails_base.append(client_mail.email)
-                    print(emails_base)
+    # DAILY SCHEDULER
+    for transmission in active_transmissions:
+        emails_base = []
+        print("TRANSMISSION TITLE:", transmission.title)
 
-                    schedule.every().day.at(convert_time).do(sendmail,
-                                                             emails_base=emails_base,
-                                                             message_theme=message.theme,
-                                                             message_body=message.body,
-                                                             transmission_id=transmission.pk
-                                                             )
-                    change_transmission_status = mailing.models.Transmission.objects.get(id=transmission.pk)
-                    change_transmission_status.status = "READY"
-                    change_transmission_status.save()
+        if transmission.frequency == "DAILY":
+            print("TYPE: SEND DAILY")
+            print("ID:", transmission.pk)
+            convert_time = str(transmission.time)[:5]
+            print("TIME:", convert_time)
+            message = transmission.get_messages()
+            print("MESSAGE THEME:", message.theme)
+            print("MESSAGE BODY:", message.body)
+            for client_mail in transmission.get_clients():
+                print("EMAIL:", client_mail.email)
+                emails_base.append(client_mail.email)
+                print(emails_base)
 
-            # WEEKLY SCHEDULER
-            today = datetime.today().weekday()
-            if transmission.frequency == "WEEKLY":
-                print("TYPE: SEND WEEKLY")
-                print("ID:", transmission.pk)
-                convert_time = str(transmission.time)[:5]
-                print("TIME:", convert_time)
-                message = transmission.get_messages()
-                print("MESSAGE THEME:", message.theme)
-                print("MESSAGE BODY:", message.body)
-                for client_mail in transmission.get_clients():
-                    print("EMAIL:", client_mail.email)
-                    emails_base.append(client_mail.email)
-                    print(emails_base)
+                schedule.every().day.at(convert_time).do(sendmail,
+                                                         emails_base=emails_base,
+                                                         message_theme=message.theme,
+                                                         message_body=message.body,
+                                                         transmission_id=transmission.pk
+                                                         )
+                change_transmission_status = mailing.models.Transmission.objects.get(id=transmission.pk)
+                change_transmission_status.status = "READY"
+                change_transmission_status.save()
 
-                    if today == 0:
-                        schedule.every().sunday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                    message_theme=message.theme, message_body=message.body,
-                                                                    transmission_id=transmission.pk)
-                    if today == 1:
-                        schedule.every().monday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                    message_theme=message.theme, message_body=message.body,
-                                                                    transmission_id=transmission.pk)
-                    if today == 2:
-                        schedule.every().tuesday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                     message_theme=message.theme, message_body=message.body,
-                                                                     transmission_id=transmission.pk)
-                    if today == 3:
-                        schedule.every().wednesday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                       message_theme=message.theme, message_body=message.body,
-                                                                       transmission_id=transmission.pk)
-                    if today == 4:
-                        schedule.every().thursday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                      message_theme=message.theme, message_body=message.body,
-                                                                      transmission_id=transmission.pk)
-                    if today == 5:
-                        schedule.every().friday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                    message_theme=message.theme, message_body=message.body,
-                                                                    transmission_id=transmission.pk)
-                    if today == 6:
-                        schedule.every().saturday.at(convert_time).do(sendmail, emails_base=emails_base,
-                                                                      message_theme=message.theme, message_body=message.body,
-                                                                      transmission_id=transmission.pk)
+        # WEEKLY SCHEDULER
+        today = datetime.today().weekday()
+        if transmission.frequency == "WEEKLY":
+            print("TYPE: SEND WEEKLY")
+            print("ID:", transmission.pk)
+            convert_time = str(transmission.time)[:5]
+            print("TIME:", convert_time)
+            message = transmission.get_messages()
+            print("MESSAGE THEME:", message.theme)
+            print("MESSAGE BODY:", message.body)
+            for client_mail in transmission.get_clients():
+                print("EMAIL:", client_mail.email)
+                emails_base.append(client_mail.email)
+                print(emails_base)
 
-                    change_transmission_status = mailing.models.Transmission.objects.get(id=transmission.pk)
-                    change_transmission_status.status = "READY"
-                    change_transmission_status.save()
+                if today == 0:
+                    schedule.every().sunday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                message_theme=message.theme, message_body=message.body,
+                                                                transmission_id=transmission.pk)
+                if today == 1:
+                    schedule.every().monday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                message_theme=message.theme, message_body=message.body,
+                                                                transmission_id=transmission.pk)
+                if today == 2:
+                    schedule.every().tuesday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                 message_theme=message.theme, message_body=message.body,
+                                                                 transmission_id=transmission.pk)
+                if today == 3:
+                    schedule.every().wednesday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                   message_theme=message.theme,
+                                                                   message_body=message.body,
+                                                                   transmission_id=transmission.pk)
+                if today == 4:
+                    schedule.every().thursday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                  message_theme=message.theme,
+                                                                  message_body=message.body,
+                                                                  transmission_id=transmission.pk)
+                if today == 5:
+                    schedule.every().friday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                message_theme=message.theme, message_body=message.body,
+                                                                transmission_id=transmission.pk)
+                if today == 6:
+                    schedule.every().saturday.at(convert_time).do(sendmail, emails_base=emails_base,
+                                                                  message_theme=message.theme,
+                                                                  message_body=message.body,
+                                                                  transmission_id=transmission.pk)
 
-            # MONTHLY SCHEDULER
-            if transmission.frequency == "MONTHLY":
-                print("TYPE: SEND MONTHLY")
-                print("ID:", transmission.pk)
-                convert_time = str(transmission.time)[:5]
-                print("TIME:", convert_time)
-                message = transmission.get_messages()
-                print("MESSAGE THEME:", message.theme)
-                print("MESSAGE BODY:", message.body)
-                for client_mail in transmission.get_clients():
-                    print("EMAIL:", client_mail.email)
-                    emails_base.append(client_mail.email)
-                    print(emails_base)
-                    schedule.every(4).weeks.do(sendmail, emails_base=emails_base, message_theme=message.theme,
-                                               message_body=message.body, transmission_id=transmission.pk)
+                change_transmission_status = mailing.models.Transmission.objects.get(id=transmission.pk)
+                change_transmission_status.status = "READY"
+                change_transmission_status.save()
 
-                    change_transmission_status = mailing.models.Transmission.objects.get(id=transmission.pk)
-                    change_transmission_status.status = "READY"
-                    change_transmission_status.save()
+        # MONTHLY SCHEDULER
+        if transmission.frequency == "MONTHLY":
+            print("TYPE: SEND MONTHLY")
+            print("ID:", transmission.pk)
+            convert_time = str(transmission.time)[:5]
+            print("TIME:", convert_time)
+            message = transmission.get_messages()
+            print("MESSAGE THEME:", message.theme)
+            print("MESSAGE BODY:", message.body)
+            for client_mail in transmission.get_clients():
+                print("EMAIL:", client_mail.email)
+                emails_base.append(client_mail.email)
+                print(emails_base)
+                schedule.every(4).weeks.do(sendmail, emails_base=emails_base, message_theme=message.theme,
+                                           message_body=message.body, transmission_id=transmission.pk)
 
-            print("ALL JOBS:")
-            print(schedule.get_jobs())
+                change_transmission_status = mailing.models.Transmission.objects.get(id=transmission.pk)
+                change_transmission_status.status = "READY"
+                change_transmission_status.save()
 
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
-    return render(request, "mailing/run_scheduler.html")
+        print("ALL JOBS:")
+        print(schedule.get_jobs())
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
